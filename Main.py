@@ -37,26 +37,29 @@ class SudokuBoard:
             print(self.board[_])
         return None
 
-    """
-    def getRow(sudoku, rowNum):
-        #Returns rowNum row of the sudoku
-        row = sudoku[9 * rowNum: 9 * rowNum + 9]
-        return row
+    def getRow(self, rowNum):
+        #Returns rowNum-th row of the sudoku (numbered starting from 0)
+        return self.board[rowNum]
 
-    def getCol(sudoku, colNum):
-        #Returns colNum column of the sudoku
+    def getCol(self, colNum):
+        #Returns colNum-th column of the sudoku (numbered starting from 0)
         col = []
         for y in range(9):
-            col.append(sudoku[9 * y + colNum])
+            col.append(self.board[y][colNum])
         return col
 
-    def getGrid(sudoku, gridNum):
-        #Returns gridNum grid (3 by 3) of the sudoku
-        #Next two lines are likely wrong ***
+    def getGrid(self, gridNum):
+        #Returns gridNum-th grid (3 by 3) of the sudoku numbered:
+        #/1//2//3/
+        #/4//5//6/
+        #/7//8//9/
+        startingRow = 3 * ((gridNum - 1) // 3)
+        startingCol = 0 if gridNum == 1 or gridNum == 4 or gridNum == 7 else None
+        startingCol = 3 if gridNum == 2 or gridNum == 5 or gridNum == 8 else 6
         grid = []
-        for y in range(3 * (gridNum), 3 * (gridNum) + 3):
-            for x in range(3 * (gridNum), 3 * (gridNum) + 3):
-                pass
+        for i in range(3):
+            row = self.board[startingRow + i][startingCol: startingCol + 3]
+            grid.append(row)
         return grid
-    """
+    
 newBoard = SudokuBoard(values = {})
