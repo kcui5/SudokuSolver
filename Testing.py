@@ -1,4 +1,6 @@
 #File used to test code
 
-listOne = [1, 2, 3, 4]
-print(listOne[1:2])
+myDict = {"first": "8", "second": "9"}
+print(myDict)
+for item in myDict:
+    print(item[:3])

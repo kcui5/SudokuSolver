@@ -8,7 +8,11 @@ class SudokuBoard:
 
         if values:
             #If given values, populate the board with those values
-            pass
+            for item in values:
+                digit = int(values[item])
+                row = int(item[0])
+                col = int(item[1])
+                self.board[row][col] = digit
         else:
             #If not given values, ask for manual input or random generation
             validInput = False
@@ -61,5 +65,21 @@ class SudokuBoard:
             row = self.board[startingRow + i][startingCol: startingCol + 3]
             grid.append(row)
         return grid
-    
-newBoard = SudokuBoard(values = {})
+
+values = {}
+#Update sudoku board values from text file if the text file has contents
+with open("SampleBoard.txt", "r") as boardFile:
+    #Making values a dict variable is unecessary but I want the practice
+    writtenBoard = boardFile.readlines()
+    rowNum = 0
+    colNum = 0
+    for line in writtenBoard:
+        line = line[:-1]
+        for char in line:
+            if not int(char) == 0:
+                values.update({f"{rowNum}{colNum}": char})
+            colNum += 1
+        colNum = 0
+        rowNum += 1
+
+newBoard = SudokuBoard(values)
