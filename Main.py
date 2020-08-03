@@ -58,13 +58,74 @@ class SudokuBoard:
         #/4//5//6/
         #/7//8//9/
         startingRow = 3 * ((gridNum - 1) // 3)
-        startingCol = 0 if gridNum == 1 or gridNum == 4 or gridNum == 7 else None
-        startingCol = 3 if gridNum == 2 or gridNum == 5 or gridNum == 8 else 6
+        if gridNum == 1 or gridNum == 4 or gridNum == 7:
+            startingCol = 0
+        elif gridNum == 2 or gridNum == 5 or gridNum == 8:
+            startingCol = 3
+        else:
+            startingCol = 6
         grid = []
         for i in range(3):
             row = self.board[startingRow + i][startingCol: startingCol + 3]
             grid.append(row)
         return grid
+
+    def getGridNum(self, row, col):
+        #Returns the grid number of the given row and column numbers
+        #(To be used by getGrid())
+        gridNum = 0
+        if row < 3:
+            if col < 3:
+                gridNum = 1
+            elif col < 6:
+                gridNum = 2
+            elif col < 9:
+                gridNum = 3
+        elif row < 6:
+            if col < 3:
+                gridNum = 4
+            elif col < 6:
+                gridNum = 5
+            elif col < 9:
+                gridNum = 6
+        elif row < 9:
+            if col < 3:
+                gridNum = 7
+            elif col < 6:
+                gridNum = 8
+            elif col < 9:
+                gridNum = 9
+        return gridNum
+
+class Solver:
+    def __init__(self, board):
+        self.board = board
+
+    def findPossibleValues(self, row, col):
+        #Finds a list of possible values for the entry at row, col
+        possibles = []
+        notPossibles = []
+        rowList = self.board.getRow(row)
+        for innerRowItem in rowList:
+            if type(innerRowItem) == int:
+                if not innerRowItem in notPossibles:
+                    notPossibles.append(innerRowItem)
+        colList = self.board.getCol(col)
+        for innerColItem in colList:
+            if type(innerColItem) == int:
+                if not innerColItem in notPossibles:
+                    notPossibles.append(innerColItem)
+        gridNum = self.board.getGridNum(row, col)
+        gridList = self.board.getGrid(gridNum)
+        for gridRow in gridList:
+            for gridItem in gridRow:
+                if type(gridItem) == int:
+                    if not gridItem in notPossibles:
+                        notPossibles.append(gridItem)
+        for i in range(1, 10):
+            if not i in notPossibles:
+                possibles.append(i)
+        return possibles
 
 values = {}
 #Update sudoku board values from text file if the text file has contents
@@ -83,3 +144,5 @@ with open("SampleBoard.txt", "r") as boardFile:
         rowNum += 1
 
 newBoard = SudokuBoard(values)
+solvedBoard = Solver(newBoard)
+print(solvedBoard.findPossibleValues(0, 0))
