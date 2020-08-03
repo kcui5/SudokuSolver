@@ -99,24 +99,24 @@ class SudokuBoard:
 
 class Solver:
     def __init__(self, board):
-        self.board = board
+        self.solvingBoard = board
 
     def findPossibleValues(self, row, col):
         #Finds a list of possible values for the entry at row, col
         possibles = []
         notPossibles = []
-        rowList = self.board.getRow(row)
+        rowList = self.solvingBoard.getRow(row)
         for innerRowItem in rowList:
             if type(innerRowItem) == int:
                 if not innerRowItem in notPossibles:
                     notPossibles.append(innerRowItem)
-        colList = self.board.getCol(col)
+        colList = self.solvingBoard.getCol(col)
         for innerColItem in colList:
             if type(innerColItem) == int:
                 if not innerColItem in notPossibles:
                     notPossibles.append(innerColItem)
-        gridNum = self.board.getGridNum(row, col)
-        gridList = self.board.getGrid(gridNum)
+        gridNum = self.solvingBoard.getGridNum(row, col)
+        gridList = self.solvingBoard.getGrid(gridNum)
         for gridRow in gridList:
             for gridItem in gridRow:
                 if type(gridItem) == int:
@@ -126,6 +126,22 @@ class Solver:
             if not i in notPossibles:
                 possibles.append(i)
         return possibles
+
+    def solveBoardOnce(self):
+        #Loops through the entire board once and attempts to solve each entry
+        newChange = False
+        for r in range(9):
+            for c in range(9):
+                if type(self.solvingBoard.board[r][c]) == list:
+                    entry = self.findPossibleValues(r, c)
+                    if len(entry) == 1:
+                        self.solvingBoard.board[r][c] = entry[0]
+                        newChange = True
+        return newChange
+
+    def solve(self):
+        while self.solveBoardOnce():
+            self.solvingBoard.printSudoku()
 
 values = {}
 #Update sudoku board values from text file if the text file has contents
@@ -145,4 +161,4 @@ with open("SampleBoard.txt", "r") as boardFile:
 
 newBoard = SudokuBoard(values)
 solvedBoard = Solver(newBoard)
-print(solvedBoard.findPossibleValues(0, 0))
+solvedBoard.solve()
