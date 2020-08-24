@@ -23,10 +23,21 @@ class SudokuBoard:
             if mORr == "M":
                 for r in range(9):
                     for c in range(9):
-                        num = input(f"Row {r + 1}, Column {c + 1}: ")
-                        if num:
-                            self.board[r][c].append(int(num))
-                            num = None
+                        validInput = False
+                        while not validInput:
+                            num = input(f"Row {r + 1}, Column {c + 1}: ")
+                            if num:
+                                try:
+                                    if int(num) > 0 and int(num) < 10:
+                                        self.board[r][c] = (int(num))
+                                        validInput = True
+                                    else:
+                                        print("Invalid input!")
+                                except (ValueError):
+                                    print("Invalid input!")
+                                num = None
+                            else:
+                                validInput = True
             elif mORr == "R":
                 pass
             else:
@@ -128,7 +139,7 @@ class Solver:
         return possibles
 
     def solveBoardOnce(self):
-        #Loops through the entire board once and attempts to solve each entry
+        #Loops through the entire board once and attempts to definitively solve each entry
         newChange = False
         for r in range(9):
             for c in range(9):
@@ -140,8 +151,13 @@ class Solver:
         return newChange
 
     def solve(self):
+        #Find definitive entries
         while self.solveBoardOnce():
             pass
+        #Start guessing entries
+
+        pass
+
         return self.solvingBoard
 
 class Validator:
