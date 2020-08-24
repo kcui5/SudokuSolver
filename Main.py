@@ -188,7 +188,7 @@ class Validator:
 
 values = {}
 #Update sudoku board values from text file if the text file has contents
-with open("SampleBoard.txt", "r") as boardFile:
+with open("DifficultBoard.txt", "r") as boardFile:
     #Making values a dict variable is unecessary but I want the practice
     writtenBoard = boardFile.readlines()
     rowNum = 0
