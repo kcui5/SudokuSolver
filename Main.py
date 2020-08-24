@@ -141,7 +141,50 @@ class Solver:
 
     def solve(self):
         while self.solveBoardOnce():
-            self.solvingBoard.printSudoku()
+            pass
+        return self.solvingBoard
+
+class Validator:
+    def __init__(self, board):
+        self.validatingBoard = board
+
+    def validate(self):
+        #Validate rows
+        for i in range(9):
+            try:
+                rowNums = []
+                for num in self.validatingBoard.getRow(i):
+                    if num in range(1, 10) and not num in rowNums:
+                        rowNums.append(num)
+                    else:
+                        return False
+            except (TypeError):
+                return False
+        #Validate columns
+        for i in range(9):
+            try:
+                colNums = []
+                for num in self.validatingBoard.getCol(i):
+                    if num in range(1, 10) and not num in colNums:
+                        colNums.append(num)
+                    else:
+                        return False
+            except (TypeError):
+                return False
+        #Validate grids
+        for i in range(1, 10):
+            grid = self.validatingBoard.getGrid(i)
+            for row in grid:
+                try:
+                    gridNums = []
+                    for num in row:
+                        if num in range(1, 10) and not num in gridNums:
+                            gridNums.append(num)
+                        else:
+                            return False
+                except (TypeError):
+                    return False
+        return True
 
 values = {}
 #Update sudoku board values from text file if the text file has contents
@@ -160,5 +203,13 @@ with open("SampleBoard.txt", "r") as boardFile:
         rowNum += 1
 
 newBoard = SudokuBoard(values)
-solvedBoard = Solver(newBoard)
-solvedBoard.solve()
+solvingBoard = Solver(newBoard)
+solvedBoard = solvingBoard.solve()
+print("Solved Board:")
+solvedBoard.printSudoku()
+
+validatedBoard = Validator(solvedBoard)
+if validatedBoard.validate():
+    print("The Sudoku has been solved!")
+else:
+    print("The Sudoku has not been solved!")
