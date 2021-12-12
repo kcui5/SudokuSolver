@@ -150,15 +150,43 @@ class Solver:
                         newChange = True
         return newChange
 
+    def guessSolveBoard(self):
+        #Loops through board once and attempts to guess values for entries
+        #The ideal cell is the cell on the board with the lowest number of possible values
+        idealCellRow = -1
+        idealCellCol = -1
+        numPossibleValues = 9
+        #Find ideal cell
+        for r in range(9):
+            for c in range(9):
+                if type(self.solvingBoard.board[r][c]) == list:
+                    entry = self.findPossibleValues(r, c)
+                    if len(entry) < numPossibleValues:
+                        idealCellRow = r
+                        idealCellCol = c
+                        numPossibleValues = len(entry)
+        #Guess values for the ideal cell
+        entry = self.findPossibleValues(idealCellRow, idealCellCol)
+        for possibleNum in entry:
+            self.solvingBoard.board[r][c] = possibleNum
+            if self.solve()[1]:
+                correctNum = possibleNum
+            self.solvingBoard.board[r][c] = []     
+
     def solve(self):
         #Find definitive entries
         while self.solveBoardOnce():
             pass
-        #Start guessing entries
-
-        pass
-
-        return self.solvingBoard
+        #Check if the board is already solved
+        checkingBoard = Validator(self.solvingBoard)
+        if checkingBoard.validate():
+            return self.solvingBoard, True
+        """
+        #Guess entries to solve
+        if self.guessSolveBoard():
+            self.solve()
+        """
+        return self.solvingBoard, True
 
 class Validator:
     def __init__(self, board):
@@ -220,7 +248,7 @@ with open("DifficultBoard.txt", "r") as boardFile:
 
 newBoard = SudokuBoard(values)
 solvingBoard = Solver(newBoard)
-solvedBoard = solvingBoard.solve()
+solvedBoard = solvingBoard.solve()[0]
 print("Solved Board:")
 solvedBoard.printSudoku()
 

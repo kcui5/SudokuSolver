@@ -1,6 +1,6 @@
 #File used to test code
+def returnTuple():
+    return 4, 10
 
-for i in range(9):
-    print(i)
-    if i == 3:
-        i -= 4
+x = returnTuple()
+print(x[0])
